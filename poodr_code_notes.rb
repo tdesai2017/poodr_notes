@@ -122,11 +122,11 @@ class Parts
     tire_size: tire_size}.merge(local_spares)
   end
 
+  #subclasses may override
   def default_tire_size
     raise NotImplementedError
   end
 
-  #subclasses may override
   def post_initialize(opts)
     nil
   end
@@ -192,6 +192,7 @@ puts mountain_bike.spares
 ############################################################################################################
 
 #Composite Bikes and parts code - Pg 182
+#Here, there is no inheritance, but rather the "Parts" resource itself determines the final type of bike
 
 class Bicycle
   attr_reader :size, :parts
@@ -213,6 +214,7 @@ class Parts
   def_delegators :@parts, :size, :each
   include Enumerable
 
+  #parts is just an array of many "Part"
   def initialize(parts)
     @parts = parts
   end
@@ -258,3 +260,15 @@ mountain_config =
 
   mountain_bike = Bicycle.new(size: 'L', parts: PartsFactory.build(config: mountain_config))
   puts mountain_bike.spares
+
+
+  #1. Has Various "Parts" implementations inherit from their Parts upserclass, and each is characterized by various implicit "Part" representations
+  # that are inherited from the superclass or explicityly added. The second example has an Explicit "Part" structure --> thereby saying that "Parts"
+  # will have an array of Part resources
+
+  #Here, instead of "inheriting" many specific implicit "Part" like the Inheritance version of "Parts" does, 
+  #the Composition version of Parts simply accepts an array of "Part" and stores it within.
+  #Thus, Parts now "has-a" collection of parts as opposed to Parts "being-a" type of the superclass Parts (i.e. instead of being a Parts verions that
+  #automatically has the "Super Parts" information within it)
+
+  #Similar example: Instead of a Dog "being-an" animal, a Dog is rather just a Dog that "has-a" requires oxygen requirement
