@@ -272,3 +272,40 @@ mountain_config =
   #automatically has the "Super Parts" information within it)
 
   #Similar example: Instead of a Dog "being-an" animal, a Dog is rather just a Dog that "has-a" requires oxygen requirement
+
+
+
+  #Random Composition Example - that I kinda turned into inheritance
+  #- https://github.com/pruett/ruby-patterns/blob/master/concepts/inheritance-vs-composition.md
+
+  class Mobility
+    def lumber; puts "lumbering"; end
+    def crabwalk; puts "crabwalking"; end
+  end
+
+  class Animal
+    attr_reader :mobility
+
+    def initialize(mobility:)
+      @mobility = mobility
+    end
+
+    def move
+      raise NotImplementedError
+    end
+  end
+
+  class Bear < Animal
+    def move
+      mobility.lumber
+    end
+  end
+  
+  class Crab < Animal
+    def move
+      @mobility.crabwalk
+    end
+  end
+  
+  Bear.new(mobility: Mobility.new).move() #=> lumbering
+  Crab.new(mobility: Mobility.new).move #=> crabwalking
